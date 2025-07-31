@@ -1,10 +1,11 @@
 # dreamSort Mod Manager
-A Ryujinx Mod Manager for MHGU
+### A Ryujinx Mod Manager for MHGU
+```
 Developed by Handburger
-
-Supports Windows, Linux, Steam Deck
 Thanks to jSQrD for providing Linux Binaries for dreamSort
-Here's a list of features:
+```
+Supports Windows x64, Linux, Steam Deck
+> Here's a list of features:
 
 * Install mods easily with drag-drop folders, 7z or zip files (6.2.4 feature).
 * Install cheats easily via checkbox and have it be applied to Ryujinx. (bugfixed)
@@ -21,3 +22,29 @@ Here's a list of features:
 * App warnings if Ryujinx is running before you press apply - avoiding errors.
 * Permanent Dark Mode (Hurray!)
 * Yoohyeon from Dreamcatcher as the icon.
+
+For Compiling for Linux Binaries
+```
+Python 3
+Need tkinter from your package manager 
+For Ubuntu/Debian:
+  apt-get install python3-tk
+For Fedora:
+  dnf install python3-tkinter
+For Arch:
+  pacman -S tk
+
+TkinterDnD2 via pip
+  pip install tkinterdnd2
+CustomTkinter via pip
+  pip install  customtkinter
+pyinstaller via pip
+  pip install -U pyinstaller
+
+pyinstaller --onefile --windowed --noconfirm HB_dreamSort.py
+```
+
+For Windows Python Pyinstaller compilation
+```
+pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="C:\Users\[redacted]\AppData\Local\Programs\Python\Python313\Lib\site-packages\tkinterdnd2;tkinterdnd2" HB_dreamSort.py
+```
