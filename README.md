@@ -1,11 +1,16 @@
 # dreamSort Mod Manager
-### A Ryujinx Mod Manager for MHGU
-```
-Developed by Handburger
-Thanks to jSQrD for providing Linux Binaries for dreamSort
-```
+
+## A mod manager designed to simplify the modding experience for Monster Hunter Generations Ultimate (MHGU) on Ryujinx
+
+>Developed by Handburger
+>
+>Contributors:
+>
+>jSQrD (jSQrD-dev): Linux Instructions and Support
+
 Supports Windows x64, Linux, Steam Deck
-> Here's a list of features:
+
+Key Features:
 
 * Install mods easily with drag-drop folders, 7z or zip files (6.2.4 feature).
 * Install cheats easily via checkbox and have it be applied to Ryujinx. (bugfixed)
@@ -21,30 +26,75 @@ Supports Windows x64, Linux, Steam Deck
 * Right-click to delete any mod or cheat you don't want.
 * App warnings if Ryujinx is running before you press apply - avoiding errors.
 * Permanent Dark Mode (Hurray!)
-* Yoohyeon from Dreamcatcher as the icon.
+* Yoohyeon from Dreamcatcher as the icon. (Windows Only)
 
-For Compiling for Linux Binaries
+### Downloads
+
+[Download from Gamebanana](https://gamebanana.com/tools/20124)
+
+### For Compiling for Linux Binaries
+
+#### Step 1: Install System Packages
+
+You still need to install tkinter from your distribution's package manager, as it's a system dependency and not a Python package that can be installed with pip or uv.
+
+##### For Ubuntu/Debian
+
+```bash
+apt-get install python3-tk
 ```
-Python 3
-Need tkinter from your package manager 
-For Ubuntu/Debian:
-  apt-get install python3-tk
-For Fedora:
-  dnf install python3-tkinter
-For Arch:
-  pacman -S tk
 
-TkinterDnD2 via pip
-  pip install tkinterdnd2
-CustomTkinter via pip
-  pip install  customtkinter
-pyinstaller via pip
-  pip install -U pyinstaller
+##### For Fedora
 
+```bash
+dnf install python3-tkinter
+```
+
+##### For Arch
+
+```bash
+pacman -S tk
+```
+
+#### Step 2: Create and Activate a Virtual Environment
+
+Navigate to your project's directory and create a new virtual environment.
+
+```bash
+python3 -m venv venv --system-site-packages
+source venv_name/bin/activate
+```
+
+You'll know it's activated when your command prompt changes to include the name of the virtual environment.
+
+#### Step 3: Install Python Libraries
+
+With the virtual environment active, install the required Python packages using pip or uv. They will be installed within your virtual environment, leaving your system's global packages untouched.
+
+##### Using pip
+
+```Bash
+pip install tkinterdnd2 customtkinter pyinstaller
+```
+
+##### Using uv
+
+```Bash
+uv pip install tkinterdnd2 customtkinter pyinstaller
+```
+
+#### Step 4: Compile the Binary
+
+Finally, run the pyinstaller command. Since your venv is active, pyinstaller will use the libraries you just installed.
+
+```Bash
 pyinstaller --onefile --windowed --noconfirm HB_dreamSort.py
 ```
 
+This will create a standalone executable in the dist folder of your project directory.
+
 For Windows Python Pyinstaller compilation
-```
+
+```powershell
 pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="C:\Users\[redacted]\AppData\Local\Programs\Python\Python313\Lib\site-packages\tkinterdnd2;tkinterdnd2" HB_dreamSort.py
 ```
