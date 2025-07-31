@@ -2,6 +2,7 @@
 A Ryujinx Mod Manager for MHGU
 
 Supports Windows, Linux, Steam Deck
+Thanks to jSQrD for providing Linux Binaries for dreamSort
 Here's a list of features:
 
 * Install mods easily with drag-drop folders, 7z or zip files (6.2.4 feature).
