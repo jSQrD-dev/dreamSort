@@ -1,14 +1,10 @@
-# This is a GitHub Actions workflow to build the application on multiple operating systems.
-# It uses a build matrix to run jobs for Linux, macOS, and Windows.
-# The workflow is triggered on every push and pull request to the main branch.
-
-name: Multi-OS Build
+name: Build Automation System Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -16,63 +12,69 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    
+
     # Specify the runner for each job in the matrix.
     runs-on: ${{ matrix.os }}
-    
+
     steps:
-    - name: Checkout repository
-      # This action checks out your repository under $GITHUB_WORKSPACE,
-      # so your workflow can access the code.
-      uses: actions/checkout@v4
-    
-    # This step configures the shell to be bash for consistency across all operating systems.
-    - name: Set up Bash shell on Windows
-      if: runner.os == 'Windows'
-      shell: bash
+      - name: Checkout repository
+        # This action checks out your repository under $GITHUB_WORKSPACE,
+        # so your workflow can access the code.
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      # This is a placeholder step for installing your application's dependencies.
-      # Replace this with the actual commands needed for your project.
-      #
-      # Examples for different OSes:
-      #
-      # On Ubuntu/macOS:
-      # run: |
-      #   sudo apt-get update
-      #   sudo apt-get install -y build-essential
-      #   brew install cmake (for macOS)
-      #
-      # On Windows (using choco or vcpkg):
-      # run: |
-      #   choco install cmake
-      #
-      # For Python projects:
-      # run: pip install -r requirements.txt
-      run: |
-        echo "Installing dependencies..."
-        # Add your dependency installation commands here
-        # Example: make install-dependencies
-    
-    - name: Build application
-      # This is the core build step where you will use your "linux instructions".
-      # The same commands will be executed on all three operating systems.
-      # GitHub Actions runners for Ubuntu and macOS have a compatible shell environment.
-      # The Windows runner is configured to use bash, so the commands should work there too.
-      run: |
-        echo "Starting build on ${{ runner.os }}..."
-        # Add your build commands here
-        # Example: make all
-        # Example: ./build.sh
-        # Example: cmake --build .
-        echo "Build complete."
+      - name: Set up Python
+        # This step sets up the Python environment on the runner.
+        # You can change the version as needed for your project.
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Archive artifacts
-      # This step can be used to save your built application binaries or other output.
-      # You can specify what to save using the `path` option.
-      # Replace 'dist/' with the directory containing your build artifacts.
-      uses: actions/upload-artifact@v4
-      with:
-        name: my-app-${{ matrix.os }}
-        path: dist/
-        retention-days: 7
+      - name: Install System Dependencies
+        # This step installs system-level dependencies for tkinter based on the operating system.
+        # For Linux, we use `apt-get` since the runner is Ubuntu.
+        # For macOS, we use `brew`.
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y python3-tk
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            brew install python-tk
+          fi
+        # For Windows, tkinter is typically included with the standard Python installation, so no separate step is needed.
+
+      - name: Install Python Libraries
+        # This step installs the required Python packages using pip.
+        # In a CI/CD environment, a virtual environment is not necessary as each job runs in an isolated container.
+        run: |
+          pip install tkinterdnd2 customtkinter pyinstaller
+
+      - name: Build application (Linux/macOS)
+        # This step runs the pyinstaller command for non-Windows operating systems.
+        # The command uses the --name flag to append the OS name to the executable.
+        if: runner.os != 'Windows'
+        run: |
+          echo "Starting build on ${{ runner.os }}..."
+          pyinstaller --onefile --windowed --noconfirm --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
+          echo "Build complete."
+
+      - name: Build application (Windows)
+        # This step runs the specific pyinstaller command for Windows.
+        # We use PowerShell (`pwsh`) as the shell to correctly handle the command's syntax.
+        # The command also uses the --name flag to append the OS name.
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          echo "Starting build on ${{ runner.os }}..."
+          # NOTE: The `--add-data` path for `tkinterdnd2` is now relative to the package installation.
+          # You may need to adjust this path if PyInstaller fails to find the correct location.
+          pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="tkinterdnd2;tkinterdnd2" --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
+          echo "Build complete."
+
+      - name: Archive artifacts
+        # This step can be used to save your built application binaries or other output.
+        # The output is located in the `dist/` directory after the build step.
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app-${{ matrix.os }}
+          path: dist/
+          retention-days: 7
