@@ -1,5 +1,6 @@
-# dreamSort
+# dreamSort Mod Manager
 A Ryujinx Mod Manager for MHGU
+Developed by Handburger
 
 Supports Windows, Linux, Steam Deck
 Thanks to jSQrD for providing Linux Binaries for dreamSort
