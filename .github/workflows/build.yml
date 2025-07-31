@@ -1,0 +1,78 @@
+# This is a GitHub Actions workflow to build the application on multiple operating systems.
+# It uses a build matrix to run jobs for Linux, macOS, and Windows.
+# The workflow is triggered on every push and pull request to the main branch.
+
+name: Multi-OS Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    # A build matrix allows the job to run multiple times with different configurations.
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    # Specify the runner for each job in the matrix.
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - name: Checkout repository
+      # This action checks out your repository under $GITHUB_WORKSPACE,
+      # so your workflow can access the code.
+      uses: actions/checkout@v4
+    
+    # This step configures the shell to be bash for consistency across all operating systems.
+    - name: Set up Bash shell on Windows
+      if: runner.os == 'Windows'
+      shell: bash
+
+    - name: Install dependencies
+      # This is a placeholder step for installing your application's dependencies.
+      # Replace this with the actual commands needed for your project.
+      #
+      # Examples for different OSes:
+      #
+      # On Ubuntu/macOS:
+      # run: |
+      #   sudo apt-get update
+      #   sudo apt-get install -y build-essential
+      #   brew install cmake (for macOS)
+      #
+      # On Windows (using choco or vcpkg):
+      # run: |
+      #   choco install cmake
+      #
+      # For Python projects:
+      # run: pip install -r requirements.txt
+      run: |
+        echo "Installing dependencies..."
+        # Add your dependency installation commands here
+        # Example: make install-dependencies
+    
+    - name: Build application
+      # This is the core build step where you will use your "linux instructions".
+      # The same commands will be executed on all three operating systems.
+      # GitHub Actions runners for Ubuntu and macOS have a compatible shell environment.
+      # The Windows runner is configured to use bash, so the commands should work there too.
+      run: |
+        echo "Starting build on ${{ runner.os }}..."
+        # Add your build commands here
+        # Example: make all
+        # Example: ./build.sh
+        # Example: cmake --build .
+        echo "Build complete."
+
+    - name: Archive artifacts
+      # This step can be used to save your built application binaries or other output.
+      # You can specify what to save using the `path` option.
+      # Replace 'dist/' with the directory containing your build artifacts.
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-app-${{ matrix.os }}
+        path: dist/
+        retention-days: 7
