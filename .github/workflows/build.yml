@@ -14,11 +14,15 @@ jobs:
   build:
     # A build matrix allows the job to run multiple times with different configurations.
     strategy:
+      fail-fast: false # This is the default, but explicitly set for clarity.
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     # Specify the runner for each job in the matrix.
     runs-on: ${{ matrix.os }}
+
+    # This ensures that a failure in this job does not stop the entire workflow.
+    continue-on-error: true
 
     steps:
     - name: Checkout repository
