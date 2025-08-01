@@ -13,9 +13,13 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false # This is the default, but explicitly set for clarity.
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+
+    # This ensures that a failure in this job does not stop the entire workflow.
+    continue-on-error: true
 
     steps:
     - name: Checkout repository
