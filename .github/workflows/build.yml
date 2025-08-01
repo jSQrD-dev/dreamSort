@@ -84,10 +84,10 @@ jobs:
       run: |
         echo "Starting build on ${{ runner.os }}..."
         if (Test-Path -Path "yoohyeon.ico") {
-          pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="tkinterdnd2;tkinterdnd2" --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
+          pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
         }
         else {
-          pyinstaller --onefile --windowed --noconfirm --add-data="tkinterdnd2;tkinterdnd2" --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
+          pyinstaller --onefile --windowed --noconfirm --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
         }
         echo "Build complete."
 
