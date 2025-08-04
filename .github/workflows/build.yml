@@ -13,13 +13,11 @@ on:
 jobs:
   build:
     strategy:
-      fail-fast: false # This is the default, but explicitly set for clarity.
+      fail-fast: false  # Ensures all OS builds run even if one fails
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-
-    # This ensures that a failure in this job does not stop the entire workflow.
-    continue-on-error: true
+    continue-on-error: true  # Allow individual OS builds to fail without failing the whole workflow
 
     steps:
     - name: Checkout repository
@@ -54,8 +52,7 @@ jobs:
       # This step installs the required Python packages using pip.
       # In a CI/CD environment, a virtual environment is not necessary as each job runs in an isolated container.
       run: |
-        pip install tkinterdnd2 customtkinter pyinstaller
-
+        pip install tkinterdnd2 customtkinter pyinstaller pillow
     - name: Build application
       run: |
         echo "Starting build on ${{ runner.os }}..."
