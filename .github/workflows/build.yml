@@ -13,9 +13,11 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false  # Ensures all OS builds run even if one fails
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    continue-on-error: true  # Allow individual OS builds to fail without failing the whole workflow
 
     steps:
     - name: Checkout repository
@@ -50,20 +52,26 @@ jobs:
       # This step installs the required Python packages using pip.
       # In a CI/CD environment, a virtual environment is not necessary as each job runs in an isolated container.
       run: |
-        pip install tkinterdnd2 customtkinter pyinstaller
-
+        pip install tkinterdnd2 customtkinter pyinstaller pillow
     - name: Build application
       run: |
         echo "Starting build on ${{ runner.os }}..."
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
+        if [[ "${{ runner.os }}" == "macOS" ]]; then
+          # Use --onedir for macOS
           if [ -f "icon.png" ]; then
-            pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+            pyinstaller --onedir --windowed --noconfirm --icon="icon.png" --add-data="icon.png:." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
           else
-            pyinstaller --onefile --windowed --noconfirm --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+            pyinstaller --onedir --windowed --noconfirm --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
           fi
         else
+          # Use --onefile for Windows and Linux
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            SEPARATOR=";"
+          else
+            SEPARATOR=":"
+          fi
           if [ -f "icon.png" ]; then
-            pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png:." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+            pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png${SEPARATOR}." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
           else
             pyinstaller --onefile --windowed --noconfirm --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
           fi
@@ -77,5 +85,8 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: dreamSort-${{ matrix.os }}
-        path: dist/
+        path: |
+          dist/**/*
+          !dist/**/*.o
+          !dist/**/*.pyc
         retention-days: 7

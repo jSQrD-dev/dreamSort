@@ -76,13 +76,13 @@ With the virtual environment active, install the required Python packages using 
 ##### Using pip
 
 ```Bash
-pip install tkinterdnd2 customtkinter pyinstaller
+pip install tkinterdnd2 customtkinter pyinstaller pillow
 ```
 
 ##### Using uv
 
 ```Bash
-uv pip install tkinterdnd2 customtkinter pyinstaller
+uv pip install tkinterdnd2 customtkinter pyinstaller pillow
 ```
 
 #### Step 4: Compile the Binary
