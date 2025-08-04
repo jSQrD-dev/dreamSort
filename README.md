@@ -32,7 +32,7 @@ Key Features:
 
 [Download from Gamebanana](https://gamebanana.com/tools/20124)
 
-### For Compiling for Linux Binaries
+### For Compiling
 
 #### Step 1: Install System Packages
 
@@ -88,7 +88,7 @@ uv pip install tkinterdnd2 customtkinter pyinstaller
 Finally, run the pyinstaller command. Since your venv is active, pyinstaller will use the libraries you just installed.
 
 ```Bash
-pyinstaller --onefile --windowed --noconfirm HB_dreamSort.py
+pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." HB_dreamSort.py
 ```
 
 This will create a standalone executable in the dist folder of your project directory.
@@ -96,5 +96,5 @@ This will create a standalone executable in the dist folder of your project dire
 For Windows Python Pyinstaller compilation
 
 ```powershell
-pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="C:\Users\[redacted]\AppData\Local\Programs\Python\Python313\Lib\site-packages\tkinterdnd2;tkinterdnd2" HB_dreamSort.py
+pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." HB_dreamSort.py
 ```
