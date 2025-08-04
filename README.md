@@ -102,5 +102,5 @@ This will create a standalone executable in the dist folder of your project dire
 For Windows Python Pyinstaller compilation
 
 ```powershell
-pyinstaller --onefile --windowed --noconfirm --icon="icon.ico" --add-data="icon.ico:." HB_dreamSort.py
+pyinstaller --onefile --windowed --noconfirm --icon="icon.ico" --add-data="icon.ico;." HB_dreamSort.py
 ```
