@@ -2,7 +2,7 @@
 # It uses a build matrix to run jobs for Linux, macOS, and Windows.
 # The workflow is triggered on every push and pull request to the main branch.
 
-name: Multi-OS Build
+name: Build
 
 on:
   push:
@@ -12,17 +12,10 @@ on:
 
 jobs:
   build:
-    # A build matrix allows the job to run multiple times with different configurations.
     strategy:
-      fail-fast: false # This is the default, but explicitly set for clarity.
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-
-    # Specify the runner for each job in the matrix.
     runs-on: ${{ matrix.os }}
-
-    # This ensures that a failure in this job does not stop the entire workflow.
-    continue-on-error: true
 
     steps:
     - name: Checkout repository
@@ -59,41 +52,24 @@ jobs:
       run: |
         pip install tkinterdnd2 customtkinter pyinstaller
 
-    - name: Add icon file for Windows build
-      # This step ensures the required icon file is available for the Windows PyInstaller command.
-      # The `yoohyeon.ico` is assumed to be in the repository.
-      if: runner.os == 'Windows'
-      run: |
-        if (Test-Path -Path "yoohyeon.ico") {
-            # This command copies the icon to the root of the workspace if it exists.
-            Copy-Item -Path "yoohyeon.ico" -Destination "."
-        }
-      shell: pwsh
-
-    - name: Build application (Linux/macOS)
-      # This step runs the pyinstaller command for non-Windows operating systems.
-      # The command uses the --name flag to append the OS name to the executable.
-      if: runner.os != 'Windows'
+    - name: Build application
       run: |
         echo "Starting build on ${{ runner.os }}..."
-        pyinstaller --onefile --windowed --noconfirm --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          if [ -f "icon.png" ]; then
+            pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+          else
+            pyinstaller --onefile --windowed --noconfirm --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+          fi
+        else
+          if [ -f "icon.png" ]; then
+            pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png:." --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+          else
+            pyinstaller --onefile --windowed --noconfirm --name "HB_dreamSort-${{ runner.os }}" HB_dreamSort.py
+          fi
+        fi
         echo "Build complete."
-
-    - name: Build application (Windows)
-      # This step runs the specific pyinstaller command for Windows.
-      # We use PowerShell (`pwsh`) as the shell to correctly handle the command's syntax.
-      # The command also uses the --name flag to append the OS name.
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        echo "Starting build on ${{ runner.os }}..."
-        if (Test-Path -Path "yoohyeon.ico") {
-          pyinstaller --onefile --windowed --noconfirm --icon="yoohyeon.ico" --add-data="yoohyeon.ico;." --add-data="tkinterdnd2;tkinterdnd2" --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
-        }
-        else {
-          pyinstaller --onefile --windowed --noconfirm --add-data="tkinterdnd2;tkinterdnd2" --name HB_dreamSort-${{ runner.os }} HB_dreamSort.py
-        }
-        echo "Build complete."
+      shell: bash
 
     - name: Archive artifacts
       # This step can be used to save your built application binaries or other output.

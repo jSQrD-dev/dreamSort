@@ -7,6 +7,8 @@
 >Contributors:
 >
 >jSQrD (jSQrD-dev): Linux Instructions and Support
+>
+>qishiqi: Application Logo
 
 Supports Windows x64, Linux, Steam Deck
 
@@ -26,7 +28,7 @@ Key Features:
 * Right-click to delete any mod or cheat you don't want.
 * App warnings if Ryujinx is running before you press apply - avoiding errors.
 * Permanent Dark Mode (Hurray!)
-* Yoohyeon from Dreamcatcher as the icon. (Windows Only)
+* Icon inspired byYoohyeon from Dreamcatcher.
 
 ### Downloads
 
@@ -88,7 +90,7 @@ uv pip install tkinterdnd2 customtkinter pyinstaller
 Finally, run the pyinstaller command. Since your venv is active, pyinstaller will use the libraries you just installed.
 
 ```Bash
-pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." HB_dreamSort.py
+pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png:." HB_dreamSort.py
 ```
 
 This will create a standalone executable in the dist folder of your project directory.
@@ -96,5 +98,5 @@ This will create a standalone executable in the dist folder of your project dire
 For Windows Python Pyinstaller compilation
 
 ```powershell
-pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png;." HB_dreamSort.py
+pyinstaller --onefile --windowed --noconfirm --icon="icon.png" --add-data="icon.png:." HB_dreamSort.py
 ```
