@@ -1,5 +1,7 @@
 # dreamSort Mod Manager
 
+![dreamSort Logo by qishiqi, MH4 Guildmarm in a pose inspired by Yoohyeon from Dreamcatcher](./image.png)
+
 ## A mod manager designed to simplify the modding experience for Monster Hunter Generations Ultimate (MHGU) on Ryujinx
 
 >Developed by Handburger
@@ -28,7 +30,7 @@ Key Features:
 * Right-click to delete any mod or cheat you don't want.
 * App warnings if Ryujinx is running before you press apply - avoiding errors.
 * Permanent Dark Mode (Hurray!)
-* Icon inspired byYoohyeon from Dreamcatcher.
+* Icon inspired by Yoohyeon from Dreamcatcher.
 
 ### Downloads
 
